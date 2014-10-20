@@ -19,19 +19,33 @@ int main()
 	while (command != "exit")	
 	{
 		cout << "tran$hell -> ";
-		cin >> command;
+		getline(cin, command);
 
+		if(command=="exit"){
+			break;
+		}
 		int pid = fork();
 		if (pid==0){
 
-			wait(NULL);	
-			char *argv[4];
+			char *argv[command.size()+1];
 			
-			argv[0]=new char[5];
-			strcpy(argv[0], command.c_str());
-			
+			int i = 0;
+			while(i <= command.size())
+			{
+				argv[i] = new char[command.size()];
+				strcpy(argv[i], command.c_str());
+				i  = i+1;
+			}
 			execvp(command.c_str(), argv);
+			cout << "after" << endl;
+			break;
 		}
+		else if(pid == -1) {
+			wait(NULL);
+			perror("Child failed!");
+			break;
+		}
+			
 		else {
 			wait(NULL);
 			cout << "parent" << endl;
