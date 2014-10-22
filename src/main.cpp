@@ -5,38 +5,50 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 #include <iostream>
 #include <stdio.h>
 
 using namespace std;
 
+void parse(char *cmd, vector<string> &cmdout){
+
+	char *pch;
+	pch = strtok(cmd, " ");
+	while(pch != NULL){
+		cout << "token: " << pch << endl;
+		pch = strtok(NULL, " ");
+	}
+}
+
 int main()
 {
 
 	string command;
+	
 
-	while (command != "exit")	
-	{
+	while (command != "exit"){
 		cout << "tran$hell -> ";
-		getline(cin, command);
+		getline(cin, command);	
+//		parse(command.c_str());
 
-		if(command=="exit"){
-			break;
-		}
 		int pid = fork();
+
 		if (pid==0){
 
-			char *argv[command.size()+1];
-			
-			int i = 0;
-			while(i <= command.size())
+			for(int i = 0; i  < command.size() ; ++i)
 			{
-				argv[i] = new char[command.size()];
+				char *argv[command.size()];
+				argv[0] = new char[command.size()];
 				strcpy(argv[i], command.c_str());
-				i  = i+1;
+				argv[command.size()-1] = NULL;
+				parse(argv[i], argv[i]);
+				perror("");
+
+				execvp(command.c_str(), argv);
 			}
-			execvp(command.c_str(), argv);
+		
 			cout << "after" << endl;
 			break;
 		}
@@ -45,38 +57,11 @@ int main()
 			perror("Child failed!");
 			break;
 		}
-			
 		else {
 			wait(NULL);
-			cout << "parent" << endl;
 		}		
-	}
-
-	/*int pid=fork();
-	if (pid==0) {
-
-		cout << "child" << endl;
-
-		char *argv[3];
-		cout << pid;
-
-		argv[0]=new char[3];
-		strcpy(argv[0], "ls");	
-
-		argv[1]=new char[3];
-		strcpy(argv[1], "-a");
-
-		argv[2]=new char[3];
-		strcpy(argv[2], "-l");	
-
-		cout << " before" << endl;
-		execvp("ls", argv);
-		cout << " after" << endl;
 
 	}
-	else {
-		wait(0);
-		cout << "parent" << endl;
-	}*/
+
 	return 0;
 }
