@@ -49,7 +49,7 @@ void readwrite(char in[], char out[]) {
     }
 }
 void readwritebuf(char in[], char out[]) {
-    char* buf = new char[BUFSIZ];
+    char buf[BUFSIZ];
 
     int fd = open(in, O_RDONLY);
     if (fd == -1) {
@@ -63,16 +63,14 @@ void readwritebuf(char in[], char out[]) {
         exit(1);
     }
 
-    if (read(fd, buf, BUFSIZ) == -1) {
+    if (read(fd, &buf, BUFSIZ) == -1) {
         perror("Error with read");
         exit(1);
     }
-    if (write(fdd, buf, BUFSIZ) == -1) {
+    if (write(fdd, &buf, BUFSIZ) == -1) {
         perror("Error with write");
         exit(1);
     }
-
-    delete [] buf;
 }
 
 int main(int argc, char* argv[]) {
