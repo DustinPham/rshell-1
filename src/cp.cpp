@@ -74,10 +74,23 @@ void readwritebuf(char in[], char out[]) {
 }
 
 int main(int argc, char* argv[]) {
+    string temp;
+    char* tmp = 0;
+    struct stat s;
+
+    if (argv[1][0] == '-' && argv[1][1] == 'f') {
+            tmp = argv[1];
+            argv[1] = argv[2];
+            argv[2] = tmp;
+    }
+    if (argv[2][0] == '-' && argv[2][1] == 'f') {
+        tmp = argv[2];
+        argv[2] = argv[3];
+        argv[3] = tmp;
+    }
+
     string first = argv[1];
     string second = argv[2];
-    string temp;
-    struct stat s;
 
     if (first.at(0) != '.' && first.at(1) != '/') {
         temp = "./";
@@ -106,13 +119,28 @@ int main(int argc, char* argv[]) {
         cout << "Error: Second argument already exists as a file or folder." << endl;
         exit(1);
     }
-    else {
-        ofstream make(argv[2]);
-        if (!make.good()) {
-            cout << "Cannot open file" << endl;
-            exit(1);
+    else if (!ifstream(argv[2])) {
+        if (argc == 4) {
+            if (argv[3][1] != 'f') {
+                cout << "Invalid flag." << endl;
+            }
+            else if (argv[3][1] == 'f') {
+                ofstream make(argv[2]);
+                if (!make.good()) {
+                    cout << "Cannot open file" << endl;
+                    exit(1);
+                }
+                make.close();
+            }
         }
-        make.close();
+        else if (argc == 3) {
+            ofstream make(argv[2]);
+            if (!make.good()) {
+                cout << "Cannot open file" << endl;
+                exit(1);
+            }
+            make.close();
+        }
     }
 
     if (second.at(0) != '.' && second.at(1) != '/') {
