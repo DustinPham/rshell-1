@@ -78,6 +78,12 @@ int main(int argc, char* argv[]) {
     char* tmp = 0;
     struct stat s;
 
+    if (argc == 1 || argc == 2) {
+        cout << "Error: need parameters" << endl;
+        cout << "Try: cp [FLAG] [COPY SOURCE] [COPY DESTINATION]" << endl;
+        exit(1);
+    }
+
     if (argv[1][0] == '-' && argv[1][1] == 'f') {
             tmp = argv[1];
             argv[1] = argv[2];
