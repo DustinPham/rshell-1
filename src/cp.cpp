@@ -37,7 +37,7 @@ void readwrite(char in[], char out[]) {
     }
 
     int red;
-    while (red = read(fd, &buf, 1) != '\0') {
+    while ((red = read(fd, &buf, 1)) != '\0') {
         if (red == -1) {
             perror("Error with read");
             exit(1);
